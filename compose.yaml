@@ -1,0 +1,7 @@
+﻿services:
+  berserkdle:
+    image: berserkdle
+    build:
+      context: .
+      dockerfile: Berserkdle/Dockerfile
+

@@ -1,0 +1,39 @@
+﻿@model Person
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <title>Create or edit person</title>
+</head>
+<body>
+<div class="text-center">
+    <h1 class="display-4">Create a new Person</h1>
+</div>
+
+<form action="">
+    <label>Id</label>
+    <input type="number" class="form-control" asp-for="Id">
+    
+    <label>Name</label>
+    <input type="text" class="form-control" asp-for="Name">
+    
+    <label>Gender</label>
+    <input type="text" class="form-control" asp-for="Gender">
+    
+    <label>Species</label>
+    <input type="text" class="form-control" asp-for="Species">
+    
+    <label>FirstArc</label>
+    <input type="text" class="form-control" asp-for="FirstArc">
+    
+    <label>Id</label>
+    <input type="text" class="form-control" asp-for="Id">
+</form>
+
+</body>
+</html>
