@@ -1,7 +1,11 @@
+using Berserkdle.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<BerserkdleDbContext>(options => options.UseInMemoryDatabase("Berserkdle"));
 
 var app = builder.Build();
 
