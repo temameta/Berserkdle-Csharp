@@ -14,24 +14,6 @@ public class HomeController(ILogger<HomeController> logger, BerserkdleDbContext 
         return View();
     }
 
-    public IActionResult Persons()
-    {
-        var allPersons = context.Persons.ToList();
-        return View(allPersons);
-    }
-
-    public IActionResult CreateEditPerson()
-    {
-        return View();
-    }
-
-    public IActionResult CreateEditPersonForm(Person model)
-    {
-        context.Persons.Add(model);
-        context.SaveChanges();
-        return RedirectToAction("Persons");
-    }
-
     public IActionResult Privacy()
     {
         return View();
