@@ -1,40 +1,38 @@
 ﻿@{
     ViewData["Title"] = "All persons";
 }
-@model List<Person>;
+@model Person;
 <div class="text-center">
-    <h1 class="display-4">All persons</h1>
+    <h1 class="display-4">@Model.Name</h1>
 </div>
 
 @{
-    foreach (var person in Model)
-    {
         <div>
             <span>Id</span>
-            <span>@person.Id</span>
+            <span>@Model.Id</span>
         </div>
         <div>
             <span>Name</span>
-            <span>@person.Name</span>
+            <span>@Model.Name</span>
         </div>
         <div>
             <span>Gender</span>
-            <span>@person.Gender</span>
+            <span>@Model.Gender</span>
         </div>
         <div>
             <span>Species</span>
-            <span>@person.Species</span>
+            <span>@Model.Species</span>
         </div>
         <div>
             <span>First Arc</span>
-            <span>@person.FirstArc</span>
+            <span>@Model.FirstArc</span>
         </div>
         <div>
             <span>Weapons</span>
             @{
-                if (person.Weapons != null)
+                if (@Model.Weapons != null)
                 {
-                    foreach (var weapon in person.Weapons)
+                    foreach (var weapon in @Model.Weapons)
                     {
                         <span>@weapon</span>
                     }
@@ -44,14 +42,13 @@
         <div>
             <span>Groups</span>
             @{
-                if (person.Groups != null)
+                if (@Model.Groups != null)
                 {
-                    foreach (var group in person.Groups)
+                    foreach (var group in @Model.Groups)
                     {
                         <span>@group</span>
                     }
                 }
             }
         </div>
-    }
 }
