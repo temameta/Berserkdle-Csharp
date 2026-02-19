@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Create or edit person";
+}
+@model Person
+<div class="text-center">
+    <h1 class="display-4">Create a new Person</h1>
+</div>
+
+<form asp-action="CreateEditPersonForm" asp-controller="Person">
+    <label>Name</label>
+    <input type="text" class="form-control" asp-for="Name">
+    
+    <label>Gender</label>
+    <input type="text" class="form-control" asp-for="Gender">
+    
+    <label>Species</label>
+    <input type="text" class="form-control" asp-for="Species">
+    
+    <label>FirstArc</label>
+    <input type="text" class="form-control" asp-for="FirstArc">
+    
+    <label>Weapons</label>
+    <input type="text" class="form-control" asp-for="Weapons">
+    
+    <label>Groups</label>
+    <input type="text" class="form-control" asp-for="Groups">
+    
+    <button class="btn btn-primary">Create</button>
+</form>
