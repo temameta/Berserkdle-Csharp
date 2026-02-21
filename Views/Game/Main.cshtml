@@ -1,12 +1,58 @@
 ﻿@{
     ViewData["Title"] = "Berserkdle";
 }
+@model GameView
 <div class="text-center">
     Berserkdle
 </div>
 <div>
-    <form asp-controller="Game" asp-action="Main">
-        <label for=""></label>
-        <input type="text">
-    </form>
+    <section>
+        <form asp-controller="Game" asp-action="Guess">
+            <label for="guessedPerson"></label>
+            <input type="text" name="guessedPerson" id="guessedPerson">
+            <button type="submit">Отправить</button>
+        </form>
+    </section>
+    <section>
+        <table>
+            <thead>
+            <tr>
+                <th></th>
+                <th>Имя</th>
+                <th>Пол</th>
+                <th>Раса</th>
+                <th>Арка первого появления</th>
+                <th>Оружие</th>
+                <th>Группа</th>
+            </tr>
+            </thead>
+            <tbody>
+            @{
+                if (Model.GuessedPersons != null && Model.GuessedPersons.Count != 0)
+                    foreach (var person in Model.GuessedPersons)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>@person.Name</td>
+                            <td>@person.Gender</td>
+                            <td>@person.Species</td>
+                            <td>@person.FirstArc</td>
+                            <td>
+                                @foreach (var weapon in person.Weapons)
+                                {
+                                    <span>@weapon</span>
+                                }
+                            </td>
+                            <td>
+                                @foreach (var group in person.Groups)
+                                {
+                                    <span>@group</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+            }
+            </tbody>
+        </table>
+    </section>
 </div>
