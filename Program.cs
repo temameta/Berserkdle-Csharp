@@ -19,6 +19,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
     options.InstanceName = "Berserkdle";
 });
+builder.Services.AddOutputCache();
 
 var app = builder.Build();
 
