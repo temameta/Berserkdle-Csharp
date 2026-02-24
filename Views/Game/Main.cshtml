@@ -1,58 +1,102 @@
-﻿@{
+﻿@model GameViewModel
+@{
     ViewData["Title"] = "Berserkdle";
 }
-@model GameView
-<div class="text-center">
-    Berserkdle
-</div>
-<div>
-    <section>
-        <form asp-controller="Game" asp-action="Guess">
-            <label for="guessedPerson"></label>
-            <input type="text" name="guessedPerson" id="guessedPerson">
-            <button type="submit">Отправить</button>
-        </form>
-    </section>
-    <section>
-        <table>
-            <thead>
-            <tr>
-                <th></th>
-                <th>Имя</th>
-                <th>Пол</th>
-                <th>Раса</th>
-                <th>Арка первого появления</th>
-                <th>Оружие</th>
-                <th>Группа</th>
-            </tr>
-            </thead>
-            <tbody>
-            @{
-                if (Model.GuessedPersons != null && Model.GuessedPersons.Count != 0)
-                    foreach (var person in Model.GuessedPersons)
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Berserkdle</h1>
+    
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+    
+    @if (TempData["Victory"] != null)
+    {
+        <div class="alert alert-success">@TempData["Victory"]</div>
+    }
+    
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Попыток: @Model.Attempts</h5>
+                    
+                    @if (!Model.GameWon)
+                    {
+                        <form asp-controller="Game" asp-action="Guess" method="post">
+                            <div class="input-group">
+                                <input type="text" 
+                                       class="form-control" 
+                                       name="guessedPerson" 
+                                       id="guessedPerson"
+                                       placeholder="Введите имя персонажа"
+                                       list="characters" />
+                                <datalist id="characters">
+                                    @foreach (var name in Model.AllNames)
+                                    {
+                                        <option value="@name"></option>
+                                    }
+                                </datalist>
+                                <button type="submit" class="btn btn-primary">Отправить</button>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="text-center">
+                            <h4>Вы победили!</h4>
+                            <p>Загаданный персонаж: <strong>@Model.MysteryPerson</strong></p>
+                            <a asp-action="NewGame" class="btn btn-success">Новая игра</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    @if (Model.Guesses.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Имя</th>
+                        <th>Пол</th>
+                        <th>Раса</th>
+                        <th>Арка</th>
+                        <th>Оружие</th>
+                        <th>Группа</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var guess in Model.Guesses)
                     {
                         <tr>
-                            <td></td>
-                            <td>@person.Name</td>
-                            <td>@person.Gender</td>
-                            <td>@person.Species</td>
-                            <td>@person.FirstArc</td>
-                            <td>
-                                @foreach (var weapon in person.Weapons)
-                                {
-                                    <span>@weapon</span>
-                                }
+                            <td>img here</td>
+                            <td class="@(guess.NameMatches ? "bg-success text-white" : "")">
+                                @guess.Name
                             </td>
-                            <td>
-                                @foreach (var group in person.Groups)
-                                {
-                                    <span>@group</span>
-                                }
+                            <td class="@(guess.GenderMatches ? "bg-success text-white" : "bg-danger text-white")">
+                                @guess.Gender
+                            </td>
+                            <td class="@(guess.SpeciesMatches ? "bg-success text-white" : "bg-danger text-white")">
+                                @guess.Species
+                            </td>
+                            <td class="@(guess.FirstArcMatches ? "bg-success text-white" : "bg-danger text-white")">
+                                @guess.FirstArc
+                            </td>
+                            <td class="@(guess.AnyWeaponMatches == "full" ? "bg-success text-white" : guess.AnyWeaponMatches == "semi" ? "bg-caution text-white" : "bg-danger text-white")">
+                                @string.Join(", ", guess.Weapons)
+                            </td>
+                            <td class="@(guess.AnyGroupMatches == "full" ? "bg-success text-white" : guess.AnyGroupMatches == "semi" ? "bg-caution text-white" : "bg-danger text-white")">
+                                @string.Join(", ", guess.Groups)
                             </td>
                         </tr>
                     }
-            }
-            </tbody>
-        </table>
-    </section>
+                </tbody>
+            </table>
+        </div>
+    }
 </div>
