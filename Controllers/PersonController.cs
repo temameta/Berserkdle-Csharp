@@ -10,13 +10,14 @@ namespace Berserkdle.Controllers;
 
 public class PersonController(BerserkdleDbContext context) : Controller
 {
-    [OutputCache(Duration = 120, VaryByQueryKeys = new[] { "persons" })]
+    [OutputCache(Duration = 30 * 60)]
     public IActionResult Persons()
     {
         var allPersons = context.Persons.ToList();
         return View(allPersons);
     }
     
+    [OutputCache(Duration = 5 * 60, VaryByQueryKeys = new[] { "person" })]
     public async Task<IActionResult> PersonPage(int id)
     {
         return View(await context.Persons.FindAsync(id));
