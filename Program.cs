@@ -5,7 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<BerserkdleDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection")));
+builder.Services.AddDbContext<BerserkdleDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection")));
 builder.Services.AddDistributedMemoryCache(); // Required for session storage
 builder.Services.AddSession(options =>
 {
@@ -13,8 +14,15 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
+    options.InstanceName = "Berserkdle";
+});
 
 var app = builder.Build();
+
+app.UseOutputCache();
 
 app.UseSession();
 
