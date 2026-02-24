@@ -37,10 +37,10 @@ public class PersonController(BerserkdleDbContext context) : Controller
 
         var newPerson = new Person
         {
-            Name = model.Name,
-            Gender = model.Gender,
-            Species = model.Species,
-            FirstArc = model.FirstArc,
+            Name = textInfo.ToTitleCase(model.Name),
+            Gender = textInfo.ToTitleCase(model.Gender),
+            Species = textInfo.ToTitleCase(model.Species),
+            FirstArc = textInfo.ToTitleCase(model.FirstArc),
             Groups = parsedGroups,
             Weapons = parsedWeapons
         };
