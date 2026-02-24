@@ -1,6 +1,6 @@
 ﻿namespace Berserkdle.Models;
 
-public class CreatePerson
+public class CreatePersonForm
 {
     public string? Name { get; set; }
     public string? Gender { get; set; }

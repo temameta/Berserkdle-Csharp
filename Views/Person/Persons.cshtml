@@ -16,6 +16,7 @@
             <span>Name</span>
             <span>@person.Name</span>
         </div>
-        <a asp-controller="Person" asp-action="PersonPage" asp-route-id="@person.Id">Details</a>
+        <a class="btn-primary" asp-controller="Person" asp-action="PersonPage" asp-route-id="@person.Id">Details</a>
+        <a class="btn-primary" asp-controller="Person" asp-action="ConfirmDelete" asp-route-id="@person.Id">Delete</a>
     }
 }
