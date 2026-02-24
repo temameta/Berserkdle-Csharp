@@ -15,9 +15,9 @@ public class PersonController(BerserkdleDbContext context) : Controller
         return View(allPersons);
     }
     
-    public IActionResult PersonPage(int id)
+    public async Task<IActionResult> PersonPage(int id)
     {
-        return View(context.Persons.Find(id));
+        return View(await context.Persons.FindAsync(id));
     }
 
     public IActionResult CreatePerson()
@@ -25,7 +25,7 @@ public class PersonController(BerserkdleDbContext context) : Controller
         return View();
     }
 
-    public IActionResult CreatePersonForm(CreatePersonForm model)
+    public async Task<IActionResult> CreatePersonForm(CreatePersonForm model)
     {
         var parsedWeapons = new List<string>();
         var parsedGroups = new List<string>();
@@ -44,8 +44,8 @@ public class PersonController(BerserkdleDbContext context) : Controller
             Groups = parsedGroups,
             Weapons = parsedWeapons
         };
-        context.Persons.Add(newPerson);
-        context.SaveChanges();
+        await context.Persons.AddAsync(newPerson);
+        await context.SaveChangesAsync();
         return RedirectToAction("Persons");
     }
     
