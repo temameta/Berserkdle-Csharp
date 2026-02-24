@@ -19,12 +19,12 @@ public class PersonController(BerserkdleDbContext context) : Controller
         return View(context.Persons.Find(id));
     }
 
-    public IActionResult CreateEditPerson()
+    public IActionResult CreatePerson()
     {
         return View();
     }
 
-    public IActionResult CreateEditPersonForm(CreatePerson model)
+    public IActionResult CreatePersonForm(CreatePerson model)
     {
         var parsedWeapons = new List<string>();
         var parsedGroups = new List<string>();
