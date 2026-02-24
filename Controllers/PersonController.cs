@@ -3,12 +3,14 @@ using System.Globalization;
 using Berserkdle.Data;
 using Microsoft.AspNetCore.Mvc;
 using Berserkdle.Models;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 
 namespace Berserkdle.Controllers;
 
 public class PersonController(BerserkdleDbContext context) : Controller
 {
+    [OutputCache(Duration = 120, VaryByQueryKeys = new[] { "persons" })]
     public IActionResult Persons()
     {
         var allPersons = context.Persons.ToList();
