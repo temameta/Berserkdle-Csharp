@@ -30,43 +30,26 @@ public class GameController : Controller
             return RedirectToAction("Main");
         }
 
-        // Получаем загаданного персонажа из сессии
         var mysteryPersonName = HttpContext.Session.GetString("mysteryPerson");
         if (string.IsNullOrEmpty(mysteryPersonName))
-        {
             return RedirectToAction("NewGame");
-        }
-
-        // Проверяем, существует ли такой персонаж в БД
-        var guessedPersonData = await _dbContext.Persons.FirstOrDefaultAsync(p => p.Name.ToLower() == guessedPerson.ToLower());
-
+        var guessedPersonData =
+            await _dbContext.Persons.FirstOrDefaultAsync(p => p.Name.ToLower() == guessedPerson.ToLower());
         if (guessedPersonData == null)
         {
             TempData["Error"] = $"Персонаж '{guessedPerson}' не найден в базе";
             return RedirectToAction("Main");
         }
 
-        // Получаем загаданного персонажа для сравнения
         var mysteryPerson = await _dbContext.Persons.FirstOrDefaultAsync(p => p.Name == mysteryPersonName);
-
         if (mysteryPerson == null)
-        {
             return RedirectToAction("NewGame");
-        }
-
-        // Создаем результат сравнения
         var guessResult = ComparePersons(guessedPersonData, mysteryPerson);
-
-        // Сохраняем результат в сессию
         var guesses = GetGuessesFromSession();
         guesses.Add(guessResult);
         SaveGuessesToSession(guesses);
-
-        // Увеличиваем счетчик попыток
         var attempts = HttpContext.Session.GetInt32("attempts") ?? 0;
         HttpContext.Session.SetInt32("attempts", attempts + 1);
-
-        // Проверяем победу
         if (guessedPersonData.Name.Equals(mysteryPersonName, StringComparison.OrdinalIgnoreCase))
         {
             HttpContext.Session.SetString("gameWon", "true");
@@ -84,45 +67,35 @@ public class GameController : Controller
 
     private GameViewModel InitializeOrGetGame()
     {
-        var viewModel = new GameViewModel();
-
-        // Инициализация новой игры или загрузка существующей
         if (HttpContext.Session.GetString("mysteryPerson") == null)
-        {
             StartNewGame();
-        }
-
-        // Заполняем viewModel
-        viewModel.MysteryPerson = HttpContext.Session.GetString("mysteryPerson");
-        viewModel.Attempts = HttpContext.Session.GetInt32("attempts") ?? 0;
-        viewModel.GameWon = HttpContext.Session.GetString("gameWon") == "true";
-        viewModel.AllNames = GetAllNamesFromSession();
-        viewModel.Guesses = GetGuessesFromSession();
-        viewModel.ErrorMessage = TempData["Error"] as string;
-
-        return viewModel;
+        return new GameViewModel
+        {
+            MysteryPerson = HttpContext.Session.GetString("mysteryPerson"),
+            Attempts = HttpContext.Session.GetInt32("attempts") ?? 0,
+            GameWon = HttpContext.Session.GetString("gameWon") == "true",
+            AllNames = GetAllNamesFromSession(),
+            Guesses = GetGuessesFromSession(),
+            ErrorMessage = TempData["Error"] as string
+        };
     }
 
     private void StartNewGame()
     {
         var allPersons = _dbContext.Persons.ToList();
         if (!allPersons.Any())
-        {
             throw new InvalidOperationException("Нет персонажей в базе данных");
-        }
 
         var random = new Random();
         var mysteryPerson = allPersons[random.Next(allPersons.Count)];
-        
+
         HttpContext.Session.SetString("mysteryPerson", mysteryPerson.Name);
         HttpContext.Session.SetInt32("attempts", 0);
         HttpContext.Session.SetString("gameWon", "false");
-        
-        // Сохраняем все имена для автодополнения
+
         var allNames = _dbContext.Persons.Select(p => p.Name).ToList();
         HttpContext.Session.SetString("allNames", JsonSerializer.Serialize(allNames));
-        
-        // Инициализируем пустой список догадок
+
         SaveGuessesToSession(new List<PersonGuessResult>());
     }
 
@@ -135,14 +108,16 @@ public class GameController : Controller
         {
             int equalEntries = 0;
             foreach (var guessedGroup in guessed.Groups)
-                foreach (var mysteryGroup in mystery.Groups)
-                    if (guessedGroup == mysteryGroup)
-                    {
-                        equalEntries++;
-                        break;
-                    }
+            foreach (var mysteryGroup in mystery.Groups)
+                if (guessedGroup == mysteryGroup)
+                {
+                    equalEntries++;
+                    break;
+                }
+
             anyGroupsMatches = equalEntries == 0 ? "none" : "semi";
         }
+
         if (new HashSet<string>(guessed.Weapons).SetEquals(new HashSet<string>(mystery.Weapons)))
             anyWeaponMatches = "full";
         else
@@ -155,10 +130,11 @@ public class GameController : Controller
                     equalEntries++;
                     break;
                 }
+
             anyWeaponMatches = equalEntries == 0 ? "none" : "semi";
         }
-            
-        
+
+
         return new PersonGuessResult
         {
             Name = guessed.Name,
@@ -179,8 +155,8 @@ public class GameController : Controller
     private List<PersonGuessResult> GetGuessesFromSession()
     {
         var guessesJson = HttpContext.Session.GetString("guesses");
-        return string.IsNullOrEmpty(guessesJson) 
-            ? new List<PersonGuessResult>() 
+        return string.IsNullOrEmpty(guessesJson)
+            ? new List<PersonGuessResult>()
             : JsonSerializer.Deserialize<List<PersonGuessResult>>(guessesJson);
     }
 
@@ -192,8 +168,8 @@ public class GameController : Controller
     private List<string> GetAllNamesFromSession()
     {
         var allNamesJson = HttpContext.Session.GetString("allNames");
-        return string.IsNullOrEmpty(allNamesJson) 
-            ? new List<string>() 
+        return string.IsNullOrEmpty(allNamesJson)
+            ? new List<string>()
             : JsonSerializer.Deserialize<List<string>>(allNamesJson);
     }
 }
