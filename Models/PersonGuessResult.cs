@@ -11,7 +11,7 @@ public class PersonGuessResult
     public string FirstArc { get; set; }
     public bool FirstArcMatches { get; set; }
     public List<string> Weapons { get; set; } = new();
-    public bool AnyWeaponMatches { get; set; }
+    public string AnyWeaponMatches { get; set; }
     public List<string> Groups { get; set; } = new();
-    public bool AnyGroupMatches { get; set; }
+    public string AnyGroupMatches { get; set; }
 }
